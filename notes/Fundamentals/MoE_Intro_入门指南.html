@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="面向初学者的 MoE LLM 专家混合位宽压缩入门手册：概念、GPU 部署、评测、首次组会清单与一周学习路线。">
+<meta name="color-scheme" content="light">
+<title>MoE 专家混合位宽压缩 · 第一次组会入门指南</title>
+<style>
+:root{--paper:#f5f4ef;--surface:#fff;--ink:#192b3a;--muted:#526573;--teal:#08685f;--teal-soft:#e8f3ef;--line:#dce3df;--warm:#fff2db;--orange:#8b4d09;--navy:#142d3b;--radius:16px;--mono:Consolas,"SFMono-Regular",monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:26px}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;font-size:17px;line-height:1.85}a{color:var(--teal);text-underline-offset:4px;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}button,input,select,textarea{font:inherit}button,select,input[type=checkbox]{cursor:pointer}button{line-height:1.4}button:disabled{cursor:default}a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #bb6207;outline-offset:4px}p{margin:0 0 1em}h1,h2,h3,h4{line-height:1.4;letter-spacing:-.025em}h2{font-size:31px;margin:0 0 14px}h3{font-size:22px;margin:30px 0 12px}h4{font-size:18px;margin:0 0 8px}ul,ol{padding-left:1.4em;margin:10px 0 20px}li{padding-left:3px;margin:6px 0}strong{font-weight:700}small,.small{font-size:14px;line-height:1.75}.muted{color:var(--muted)}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip{position:fixed;z-index:99;top:-80px;left:20px;background:var(--surface);padding:8px 20px;border:2px solid var(--teal)}.skip:focus{top:12px}.shell{max-width:1510px;margin:auto;display:grid;grid-template-columns:252px minmax(0,1fr)}.sidebar{height:100vh;position:sticky;top:0;padding:32px 25px;overflow-y:auto;border-right:1px solid var(--line);background:#f0f2ec}.brand{display:flex;align-items:center;gap:11px;margin-bottom:28px}.mark{background:var(--teal);color:white;border-radius:11px;display:grid;place-items:center;width:45px;height:45px;font-weight:800;font-size:15px}.brand b{display:block;font-size:16px;line-height:1.4}.brand small{color:var(--muted);font-size:11px;letter-spacing:.14em}.nav-label{font-size:12px;letter-spacing:.16em;color:var(--muted);margin-bottom:12px}.sidebar nav{display:grid;gap:3px}.sidebar nav a{display:flex;gap:13px;align-items:center;padding:8px 10px;border-radius:7px;color:var(--muted);text-decoration:none;font-size:14px;line-height:1.65}.sidebar nav a span{font:12px var(--mono);color:var(--teal)}.sidebar nav a:hover,.sidebar nav a[aria-current=true]{color:var(--teal);background:#dcebe3}.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:27px 0 7px}progress{width:100%;height:5px;accent-color:var(--teal)}.side-note{font-size:12px;line-height:1.8;color:var(--muted);margin-top:28px}.main{min-width:0;padding:26px 48px 65px;max-width:1170px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 22px;font-size:12px;color:var(--muted);letter-spacing:.05em}.actions{display:flex;gap:8px;flex-wrap:wrap}.button{padding:9px 15px;border:1px solid #b8c8c1;border-radius:7px;background:#fff;color:var(--ink);font-size:14px;text-decoration:none;display:inline-block}.button:hover{background:var(--teal-soft)}.button.primary{background:var(--teal);color:#fff;border-color:var(--teal)}.hero{background:var(--navy);color:#f4f8f6;border-radius:22px;padding:44px 43px 38px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:220px;height:220px;border:1px solid #4b6b74;border-radius:50%;right:-125px;top:-100px;box-shadow:0 0 0 30px #1e3a47,0 0 0 31px #38545f,0 0 0 62px #1a3543;pointer-events:none}.eyebrow{font-size:11px;letter-spacing:.2em;font-weight:700;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:20px}.eyebrow:before{content:"";width:24px;height:2px;background:#71c8a9}.hero .eyebrow{color:#9fd8c4}.hero h1{font-size:clamp(30px,3.6vw,49px);margin:0 0 18px;max-width:680px;position:relative;z-index:1;letter-spacing:-.035em;line-height:1.35}.hero .topic{font-size:19px;color:#bde4d7;line-height:1.65;margin-bottom:20px}.hero .intro{max-width:690px;color:#d7e3e7;font-size:16px;margin-bottom:28px}.hero .button{background:transparent;color:#e5f4ee;border-color:#71948e}.hero .button.primary{background:#b7ead2;color:#133c35;border-color:#b7ead2}.hero-foot{display:flex;flex-wrap:wrap;gap:9px 18px;font-size:12px;color:#b4cbd0;margin-top:24px}.quick-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:25px 0 7px}.quick-strip div{border-bottom:2px solid var(--line);padding-bottom:17px}.quick-strip b{font-size:16px;display:block;margin-bottom:5px}.quick-strip p{font-size:14px;color:var(--muted);line-height:1.8;margin:0}.quick-strip .index{font:12px var(--mono);color:var(--teal);display:block;margin-bottom:9px}.section{padding-top:48px;scroll-margin-top:8px}.section-head{display:flex;align-items:center;gap:12px;color:var(--teal);font-size:12px;margin-bottom:12px;letter-spacing:.14em}.section-head span{background:var(--teal-soft);border:1px solid #c5dbd1;width:33px;height:28px;border-radius:5px;display:grid;place-items:center;font:12px var(--mono)}.lead{font-size:18px;color:var(--muted);margin-bottom:22px}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:23px 25px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid .card{margin:0}.card p:last-child,.callout p:last-child{margin-bottom:0}.callout{padding:18px 23px;border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 11px 11px 0;margin:20px 0}.callout.warm{background:var(--warm);border-color:#b36916}.callout .label{font-size:13px;font-weight:750;color:var(--teal);display:block;margin-bottom:6px}.callout.warm .label{color:var(--orange)}.callout p{font-size:15px}.pill{font-size:11px;letter-spacing:.06em;border-radius:4px;padding:4px 7px;background:var(--teal-soft);color:var(--teal);white-space:nowrap}.pill.warm{background:var(--warm);color:var(--orange)}.term{font-size:12px;color:var(--teal);letter-spacing:.05em;margin-bottom:6px}.term-card h3{margin:0 0 10px;font-size:21px}.term-card p{font-size:15px;line-height:1.9}.example{padding:10px 13px;background:#f2f5f2;border-radius:6px;margin-top:12px;color:#31584b;font-family:var(--mono);font-size:13px;overflow-wrap:anywhere}.formula{font:15px/1.8 var(--mono);background:#e8eeeb;padding:17px 20px;border-radius:8px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;margin:15px 0}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;margin:18px 0;background:white}table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.8}caption{text-align:left;font-weight:700;padding:13px 17px;background:#f0f4ef}th,td{text-align:left;padding:13px 17px;vertical-align:top;border-bottom:1px solid var(--line)}th{background:#eaf0eb;font-weight:700;white-space:nowrap}tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}td p{margin:0}code{font-family:var(--mono);font-size:.9em;background:#e9eeea;padding:2px 5px;border-radius:4px;overflow-wrap:anywhere}pre{white-space:pre;overflow-x:auto;background:#152d3b;color:#e0ede8;border-radius:0 0 12px 12px;padding:24px;margin:0;font:13px/1.85 var(--mono);tab-size:4}pre code{font:inherit;background:none;padding:0;color:inherit;overflow-wrap:normal}.code-head{display:flex;justify-content:space-between;gap:12px;background:#213e4c;color:#d7e6e5;padding:13px 20px;border-radius:12px 12px 0 0;font-size:13px;align-items:center}.code-head button{border:1px solid #8ba5ac;background:transparent;color:#e6f5ed}.code-box{margin:18px 0}.flow{display:flex;align-items:stretch;gap:8px;margin:18px 0}.flow .step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:17px 13px;flex:1;font-size:14px;min-width:0}.flow .step b{display:block;margin-bottom:5px;color:var(--teal)}.flow .arrow{align-self:center;color:var(--teal);font-size:20px}.flow .step span{font-size:12px;color:var(--muted)}.moe-diagram{background:#fff;border:1px solid var(--line);border-radius:14px;padding:23px;margin:22px 0}.moe-line{display:grid;grid-template-columns:1fr 28px 1.2fr 28px 1.25fr;align-items:center;gap:7px;text-align:center}.moe-box{border:1px solid #b5c8c0;background:var(--teal-soft);border-radius:9px;padding:14px 10px;font-size:14px}.experts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.expert{padding:10px 5px;border:1px solid #d4ddd8;border-radius:7px;font-size:13px;color:#596c77;background:#f5f6f3}.expert.active{background:#e2f1e9;border:2px solid var(--teal);color:#11564a}.expert small{font-size:11px}.diagram-caption{font-size:13px;color:var(--muted);line-height:1.8;margin:16px 0 0}.moe-out{margin-top:15px;text-align:center;border-top:1px dashed #a6bdb1;padding-top:13px;font-size:14px}.source{font-size:12px;color:var(--muted);margin-top:15px}.source a{color:var(--muted)}details{border:1px solid var(--line);border-radius:9px;margin:15px 0;background:#fff}summary{padding:13px 18px;font-size:15px;font-weight:650;cursor:pointer;color:var(--teal)}details>div{padding:0 20px 18px;font-size:15px}.demo-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.demo-controls label{font-size:14px;display:block;background:#f2f5f0;border:1px solid var(--line);border-radius:9px;padding:13px}.demo-controls select{display:block;margin-top:8px;width:100%;background:white;color:var(--ink);border:1px solid #9bafa5;padding:8px;border-radius:5px}.demo-result{background:var(--navy);color:#e0f3e7;border-radius:10px;padding:17px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.demo-result strong{font:26px/1.4 var(--mono);display:block;color:#c2efd6}.demo-result span{font-size:12px}.checklist{padding:0;list-style:none;margin:15px 0}.checklist li{margin:0;border-bottom:1px solid var(--line);padding:13px 0}.checklist li:last-child{border:0}.checklist label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-size:15px}.checklist input{width:19px;height:19px;margin:5px 0 0;flex:0 0 19px;accent-color:var(--teal)}.checklist label strong{display:block;margin-bottom:4px}.checklist label small{display:block;color:var(--muted)}.priority{display:flex;align-items:center;gap:10px;margin:0 0 13px;font-size:18px}.priority .pill{font-size:12px}.meeting-grid .card{padding:23px}.check-count{font:14px var(--mono);color:var(--teal)}.meeting-grid{align-items:start}.meeting-grid .full{grid-column:1/-1}.quote{font-size:18px;line-height:1.9;color:#285b4c;padding:21px 25px;background:var(--teal-soft);border-radius:12px;margin:20px 0}.quote p{margin:0}.timeline{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px 18px;margin:20px 0}.time{font:14px var(--mono);color:var(--teal);padding:15px 0;border-top:1px solid var(--line)}.task{border-top:1px solid var(--line);padding:13px 0;font-size:15px}.task strong{display:block;margin-bottom:4px}.roadmap{counter-reset:days;display:grid;gap:12px}.day{display:grid;grid-template-columns:58px 1fr;gap:18px;background:white;border:1px solid var(--line);border-radius:11px;padding:18px 22px}.day-number{font:12px/1.7 var(--mono);color:var(--teal);border-right:1px solid var(--line)}.day-number b{display:block;font-size:26px}.day h4{font-size:17px}.day p{font-size:14px;margin-bottom:5px;color:var(--muted)}.output{font-size:13px;color:var(--teal)}.notes label{display:block;font-weight:700;margin-bottom:9px}.notes textarea{width:100%;min-height:210px;background:#fffdf8;border:1px solid #bacbc0;border-radius:9px;padding:14px;color:var(--ink);font-size:14px;line-height:1.9;resize:vertical}.note-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px}.resource{display:grid;grid-template-columns:38px minmax(0,1fr);gap:14px;border-bottom:1px solid var(--line);padding:19px 0}.resource:last-child{border-bottom:0}.resource-no{font:12px var(--mono);color:var(--teal);padding-top:6px}.resource h3{font-size:17px;margin:0 0 5px}.resource p{font-size:14px;color:var(--muted);margin:5px 0 8px}.resource .links{font-size:13px;display:flex;gap:15px;flex-wrap:wrap}.queries{display:grid;gap:8px;margin:15px 0}.queries code{display:block;padding:12px 15px;font-size:13px;background:#fff;border:1px solid var(--line)}.footer{margin-top:50px;padding:24px 0 0;border-top:1px solid #cbd8cf;color:var(--muted);font-size:13px;display:flex;gap:25px;justify-content:space-between;align-items:start}.footer b{color:var(--ink);display:block}.footer a{white-space:nowrap}.js-only{display:none}html.has-js .js-only{display:initial}noscript p{background:var(--warm);padding:15px;border-radius:9px;font-size:14px}
+.hero>*{position:relative;z-index:1}
+.toc-float{display:none}
+@media(min-width:1380px){.main{padding-left:64px;padding-right:64px}}
+@media(max-width:1100px){.shell{grid-template-columns:215px minmax(0,1fr)}.sidebar{padding:27px 16px}.main{padding:24px 30px 50px}.hero{padding:33px 30px}.grid{gap:13px}.card{padding:21px}.demo-result strong{font-size:22px}.flow{flex-wrap:wrap}.flow .step{flex:1 1 40%}.flow .arrow{display:none}}
+@media(max-width:850px){.shell{display:block}.sidebar{height:auto;position:relative;padding:18px 22px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:0 0 13px}.brand small{display:none}.mark{width:36px;height:36px;font-size:13px}.brand b{font-size:15px}.nav-label,.side-note,.progress-label,progress{display:none}.sidebar nav{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.sidebar nav a{flex:0 0 auto;padding:6px 9px;font-size:13px}.sidebar nav a span{display:none}.main{max-width:860px;margin:auto;padding:22px 25px 45px}.hero h1{font-size:38px}.hero .topic{font-size:18px}.section{padding-top:40px}.meeting-grid{grid-template-columns:1fr}.meeting-grid .full{grid-column:auto}}
+@media(max-width:560px){body{font-size:16px;line-height:1.85}.main{padding:16px 18px 38px}.toolbar{font-size:11px;align-items:flex-start}.toolbar .date{max-width:140px}.toolbar .actions{gap:5px}.toolbar .button{font-size:12px;padding:7px 10px}.hero{padding:28px 23px;border-radius:15px}.hero h1{font-size:30px}.hero .topic{font-size:17px}.hero .intro{font-size:15px}.hero-foot{font-size:11px;gap:5px 13px}.eyebrow{font-size:10px;letter-spacing:.13em}.hero .actions{gap:9px}.hero .button{font-size:13px}.quick-strip{grid-template-columns:1fr;gap:12px;padding-top:20px}.quick-strip div{padding-bottom:12px;display:grid;grid-template-columns:26px 1fr;gap:0 8px}.quick-strip .index{grid-row:1/3;margin:3px 0 0}.quick-strip p{font-size:13px}.quick-strip b{font-size:15px;margin:0 0 3px}h2{font-size:26px}h3{font-size:20px}.lead{font-size:16px}.section{padding-top:35px}.grid{grid-template-columns:1fr}.card{padding:20px}.flow{display:grid;grid-template-columns:1fr 1fr}.flow .step{font-size:13px;padding:13px}.moe-diagram{padding:17px}.moe-line{grid-template-columns:1fr}.moe-line>.arrow{transform:rotate(90deg);line-height:1.5}.experts{width:100%}.demo-controls{grid-template-columns:1fr 1fr;gap:9px}.demo-result{grid-template-columns:1fr;gap:12px}.demo-result div{display:flex;align-items:baseline;gap:12px}.demo-result strong{font-size:24px;min-width:112px}.callout{padding:16px 18px}.timeline{grid-template-columns:65px 1fr;gap:10px}.day{padding:17px;gap:12px;grid-template-columns:45px 1fr}.table-wrap table{min-width:590px}.table-wrap.compact table{min-width:480px}.quote{padding:18px;font-size:16px}.formula{font-size:13px;padding:14px}.code-head{font-size:12px;padding:12px 14px}pre{padding:17px;font-size:12px}.footer{display:block}.footer a{display:inline-block;margin-top:12px}}
+@media(max-width:850px){.toc-float{display:block;position:fixed;right:18px;bottom:18px;z-index:20;background:var(--teal);color:#fff;border:1px solid #a8cfbc;border-radius:25px;text-decoration:none;font-size:13px;padding:10px 18px;box-shadow:0 3px 12px #162f3b26}.footer{padding-bottom:42px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{size:A4;margin:16mm 14mm}body{background:#fff;font-size:10.5pt;line-height:1.7;color:#000}.shell{display:block}.sidebar,.toolbar,.actions,.js-only,.note-actions,.skip,.demo-controls{display:none!important}.main{padding:0;max-width:none}.hero{background:#fff;color:#000;padding:0 0 20px;border-radius:0;border-bottom:2px solid #142d3b}.hero:after{display:none}.hero .eyebrow,.hero .topic,.hero .intro,.hero-foot{color:#244f43}.hero h1{font-size:27pt}.hero .topic{font-size:14pt}.hero .intro{font-size:11pt}.section{padding-top:25px}h2{font-size:19pt}h3{font-size:14pt}h2,h3,h4,summary{break-after:avoid}.card,.callout,.day,.resource,.moe-diagram{break-inside:avoid}.grid{gap:12px}.lead{font-size:11pt}.table-wrap{overflow:visible}.table-wrap table{min-width:0!important;font-size:9pt}th,td{padding:8px}.term-card p,.card p,.callout p,.task,.checklist label{font-size:10pt}.demo-result{background:#edf3ed;color:#000}.demo-result strong{color:#144b3d}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f2f4f2;color:#000;font-size:8pt;line-height:1.6;padding:15px}.code-head{background:#e9efeb;color:#000}.code-box{break-inside:avoid}details{border:1px solid #bcc7c0}details>div{display:block!important}.source,.small,small{font-size:9pt}.quick-strip{padding-top:16px}.hero-foot{margin-top:10px}.footer{font-size:9pt}.notes textarea{min-height:150px;height:150px;font-size:9pt}a{color:#07594e}p{orphans:3;widows:3}}
+</style>
+<style media="print">.toc-float{display:none!important}</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">跳到正文</a>
+<div class="shell">
+<aside class="sidebar" aria-label="手册导航">
+  <div class="brand"><div class="mark" aria-hidden="true">MoE</div><div><b>组会入门指南</b><small>RESEARCH FIELD GUIDE</small></div></div>
+  <div class="nav-label">从概念到第一次实验</div>
+  <nav aria-label="章节目录">
+    <a href="#mission"><span>01</span>这个课题在做什么</a>
+    <a href="#basics"><span>02</span>从 Tensor 到 Linear</a>
+    <a href="#inference"><span>03</span>LLM 怎样推理</a>
+    <a href="#quant"><span>04</span>量化与混合位宽</a>
+    <a href="#deployment"><span>05</span>为什么未必更快</a>
+    <a href="#evaluation"><span>06</span>如何判断做得好</a>
+    <a href="#meeting"><span>07</span>第一次组会清单</a>
+    <a href="#roadmap"><span>08</span>20 分钟与第一周</a>
+    <a href="#experiment"><span>09</span>第一个 PyTorch 实验</a>
+    <a href="#resources"><span>10</span>资料与检索方法</a>
+  </nav>
+  <div class="progress-label"><span>阅读位置</span><span id="progress-label">0%</span></div>
+  <progress id="reading-progress" max="100" value="0" aria-label="阅读进度"></progress>
+  <p class="side-note">第一次组会的目标：<br>说清问题，确认边界，<br>带走一个能完成的小任务。<br><br>中文优先 · 英文术语随文解释<br>单文件 · 可离线 · 可打印</p>
+</aside>
+<main id="main" class="main">
+  <div class="toolbar"><span class="date">BEGINNER EDITION · 2026.10.26</span><div class="actions"><button class="button js-only" id="expand-btn" type="button" aria-expanded="false">展开补充说明</button><button class="button js-only" id="print-btn" type="button">打印 / 存为 PDF</button></div></div>
+  <header class="hero">
+    <div class="eyebrow">Your first research meeting</div>
+    <h1>第一次组会，<br>先把问题问对。</h1>
+    <p class="topic">MoE LLM 的专家混合位宽压缩方案探索</p>
+    <p class="intro">你不需要先读懂所有论文。先建立一条清楚的主线：大模型怎样生成文本，专家为什么占内存，低位宽怎样省空间，以及为什么还要在 GPU 上真正测一次。</p>
+    <div class="actions"><a class="button primary" href="#prep20">只有 20 分钟？从这里开始</a><a class="button" href="#meeting">带着问题去组会 →</a></div>
+    <div class="hero-foot"><span>适合：有 Python 基础、刚接触 LLM 的同学</span><span>快速准备 20 分钟 / 全文约 35–45 分钟</span></div>
+  </header>
+  <noscript><p>正文、目录和代码可正常离线阅读。互动位宽示例、笔记导出和本地保存需要启用 JavaScript；你也可以手动复制笔记。</p></noscript>
+  <div class="quick-strip" aria-label="会前带走三件事">
+    <div><span class="index">01 /</span><b>一句话讲出课题</b><p>给不同专家分配不同位宽，在质量可接受时节省资源。</p></div>
+    <div><span class="index">02 /</span><b>分开看三种结果</b><p>模型质量、实际占用、GPU 速度，需要分别验证。</p></div>
+    <div><span class="index">03 /</span><b>确认第一步做什么</b><p>先定模型、设备、基线和本周可验收的产物。</p></div>
+  </div>
+
+  <section class="section" id="mission" aria-labelledby="mission-title">
+    <div class="section-head"><span>01</span>THE RESEARCH QUESTION</div>
+    <h2 id="mission-title">把课题翻译成普通话</h2>
+    <p class="lead">一套模型里有很多“专家网络”。能否给需要保护的专家留更多数值精度，让其他专家用更少的位数保存，并让这套配置在实际 GPU 上划算？</p>
+    <div class="grid">
+      <div class="card"><div class="term">ALGORITHM · 算法侧</div><h3 style="margin-top:0">把有限的位宽预算花在哪里？</h3><p>把权重数值“刻得粗一点”通常能省空间，也会引入误差。不同专家受影响的程度可能不同，因此尝试分配不同位宽，而不是全部用同一种。</p><p class="small muted">量化敏感度（quantization sensitivity）：把某部分量化后，输出或任务表现改变多少。不能只凭专家使用次数判断。</p></div>
+      <div class="card"><div class="term">GPU DEPLOYMENT · 部署侧</div><h3 style="margin-top:0">省下的位数能否变成收益？</h3><p>GPU 需要处理打包的数据、不同位宽的算子和不均匀的专家负载。配置越自由，执行过程可能越复杂；漂亮的压缩比也需要后端支持。</p><p class="small muted">部署（deployment）：让模型在指定设备、推理框架和请求条件下稳定运行，并测出真实占用与速度。</p></div>
+    </div>
+    <h3>研究可以拆成四步</h3>
+    <div class="flow" aria-label="研究流程">
+      <div class="step"><b>① 观察专家</b><span>路由频率、激活分布、权重分布、量化误差</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>② 分配位宽</b><span>在候选位宽中搜索，控制质量与资源预算</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>③ 检查质量</b><span>和浮点、统一位宽等基线公平比较</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>④ 实际部署</b><span>验证权重文件、峰值显存、延迟与吞吐</span></div>
+    </div>
+    <div class="callout"><span class="label">组会可用的一句话</span><p>“我理解这个课题是在可接受的质量下降范围内，利用专家差异分配权重／激活位宽，并结合目标 GPU 的实际执行开销，寻找更好的质量、内存和速度折中。”</p></div>
+    <details><summary>进一层：什么叫“联合优化”？</summary><div><p>先约定可执行的配置集合，再决定优化谁、约束谁。例如：<strong>最小化实测延迟，同时要求模型质量下降不超过约定阈值、峰值显存不超过预算</strong>。也可以固定质量，优先降低实际模型大小。</p><p>这不是把“位宽越小”当成唯一目标。质量可能非线性变化，延迟也不一定随位宽单调下降；还要计入搜索和校准的成本。第一次组会只需问清目标和约束，无需先掌握求解算法。</p></div></details>
+  </section>
+
+  <section class="section" id="basics" aria-labelledby="basics-title">
+    <div class="section-head"><span>02</span>THE MINIMUM VOCABULARY</div>
+    <h2 id="basics-title">从一组数字，走到一层网络</h2>
+    <p class="lead">先把 Tensor 理解成“按形状组织的数字”。数学符号可以逐步补，先看数据长什么样、经过一层后变成什么。</p>
+    <div class="grid">
+      <article class="card term-card"><div class="term">SCALAR / VECTOR / MATRIX</div><h3>数、向量、矩阵</h3><p><strong>标量 Scalar</strong> 是一个数，如 <code>3.0</code>；<strong>向量 Vector</strong> 是一列或一排数；<strong>矩阵 Matrix</strong> 是按行、列排列的二维数表。</p><div class="example">向量 [0.2, -0.5, 1.1] → shape [3]<br>矩阵 [[1, 2, 3], [4, 5, 6]] → [2, 3]</div></article>
+      <article class="card term-card"><div class="term">TENSOR</div><h3>张量：多维数组</h3><p>在 PyTorch 中，标量、向量、矩阵都可用 <code>Tensor</code> 表示。多一个维度通常只是多一个索引，例如“第几条文本、第几个 token、第几个特征”。</p><div class="example">[batch, tokens, hidden] = [2, 5, 8]<br>2 条文本 × 每条 5 个位置 × 8 个特征</div></article>
+      <article class="card term-card"><div class="term">SHAPE / DTYPE / DEVICE</div><h3>看 Tensor 先看三个属性</h3><p><code>shape</code> 是形状，各维大小决定能否相乘；<code>dtype</code> 是数字格式，影响精度与占用；<code>device</code> 表示数据在 CPU 还是 GPU。</p><div class="example">x.shape · x.dtype · x.device<br>元素数 × 每元素字节数 ≈ 原始数据大小</div></article>
+      <article class="card term-card"><div class="term">LINEAR LAYER / FULLY CONNECTED</div><h3>线性层：把特征重新组合</h3><p>用一组固定权重，把输入的多个特征组合成新的特征。<code>nn.Linear(3, 4)</code> 接收每个位置的 3 个数，输出 4 个数；默认也有偏置 bias。</p><div class="example">X: [2, 3] · W: [4, 3]<br>Y = X @ W.T + b → [2, 4]</div></article>
+    </div>
+    <p class="small muted" style="margin-top:14px"><code>@</code> 表示矩阵乘法；<code>W.T</code> 表示把权重矩阵的行列交换。PyTorch 将 Linear 的权重保存为 [输出维度, 输入维度]。有偏置时严格说是仿射变换，入门时先掌握上面的计算关系即可。</p>
+    <h3>Weight 和 Activation：两个主角</h3>
+    <div class="table-wrap compact"><table><caption>两者都可以是 Tensor，区别在于它们从哪里来</caption><thead><tr><th scope="col">概念</th><th scope="col">直观理解</th><th scope="col">和本课题的关系</th></tr></thead><tbody>
+      <tr><th scope="row">权重 Weight，W</th><td>训练得到并保存的参数；普通推理时通常不更新。</td><td>权重量化会改变模型保存方式与运行时读取的数据量。</td></tr>
+      <tr><th scope="row">激活 Activation，A</th><td>给定输入在各层计算出的中间数值，例如 Linear 的输入／输出。</td><td>随文本、位置和批次变化；激活量化常需代表性数据确定范围。</td></tr>
+    </tbody></table></div>
+    <div class="callout warm"><span class="label">两个词义提醒</span><p><strong>Activation 不等于 activation function（激活函数）</strong>；后者是 SiLU、ReLU 等非线性运算。<strong>Dense layer</strong> 常指全连接层；这里的 <strong>Dense model</strong> 指 token 使用同一套 FFN 的常规模型，与按 token 选少量专家的 Sparse MoE 相对。</p></div>
+    <p class="source">基础参考：<a href="https://docs.pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html">PyTorch Tensors 教程</a> · <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Linear.html">torch.nn.Linear 文档</a></p>
+  </section>
+
+  <section class="section" id="inference" aria-labelledby="inference-title">
+    <div class="section-head"><span>03</span>HOW GENERATION WORKS</div>
+    <h2 id="inference-title">LLM 怎样一个个生成 token？</h2>
+    <p class="lead">先看常见的自回归、仅解码器 Transformer：输入文本，预测下一个 token，再把新 token 接回去，继续预测。</p>
+    <div class="flow" aria-label="文本生成的简化流程">
+      <div class="step"><b>文本 → Token</b><span>Tokenizer 分词并转成编号</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>编号 → 特征</b><span>Embedding 查表得到向量</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>多层 Transformer</b><span>Attention 与 FFN 逐层处理</span></div><span class="arrow" aria-hidden="true">→</span>
+      <div class="step"><b>预测 → 新 Token</b><span>得到分数，选取下一个编号</span></div>
+    </div>
+    <p class="small muted">Token 是分词单位，可能是字、词的一部分或符号，不总是一个汉字／单词。Inference（推理）使用已有模型做预测；Training（训练）还需要计算梯度并更新参数。</p>
+    <div class="grid">
+      <div class="card"><div class="term">ATTENTION · 注意力</div><h3 style="margin-top:0">从上下文取信息</h3><p>当前位置根据 Query（查询）与历史 Key（键）的匹配程度，对 Value（值）加权汇总。入门先记：它让不同 token 之间交流；生成时不能偷看未来 token。</p></div>
+      <div class="card"><div class="term">FFN · 前馈网络</div><h3 style="margin-top:0">加工每个位置的特征</h3><p>Feed-Forward Network 通常由线性变换和非线性函数组成。它对各 token 的特征向量做处理。一个 Transformer 层还包含残差连接、归一化等结构。</p></div>
+    </div>
+    <h3>一次请求的两个阶段</h3>
+    <div class="table-wrap"><table><thead><tr><th scope="col">阶段</th><th scope="col">在做什么</th><th scope="col">为什么要分开测</th></tr></thead><tbody>
+      <tr><th scope="row">预填充 Prefill</th><td>并行处理 prompt 中的 token，建立 KV cache，并得到预测首个生成 token 所需的信息。</td><td>prompt 长度影响明显；与首 token 等待时间有关。</td></tr>
+      <tr><th scope="row">解码 Decode</th><td>常规自回归生成中，每个请求逐步生成新 token，复用缓存的历史 Key/Value。</td><td>影响后续输出速度；batch、上下文长度会改变瓶颈。</td></tr>
+    </tbody></table></div>
+    <p><strong>KV cache（键值缓存）</strong> 让模型不用每一步重新计算过去 token 的 K/V，但缓存也占显存。普通全注意力的缓存通常随上下文、并发请求增加；滑动窗口等架构有所不同。降低权重位宽，不会自动缩小 KV cache。</p>
+    <h3>MoE 改了哪里？</h3>
+    <p><strong>Mixture of Experts（混合专家）</strong> 通常把部分 FFN 换成多个专家网络，由 <strong>Router / Gating（路由器／门控）</strong> 为每个 token 选择少量专家。<strong>Top-k</strong> 表示选出路由分数靠前的 k 个，再按路由权重组合它们的输出。</p>
+    <figure class="moe-diagram">
+      <div class="moe-line">
+        <div class="moe-box">某个 token 的<br><strong>特征向量 x</strong></div><div class="arrow" aria-hidden="true">→</div>
+        <div class="moe-box"><strong>当前层 Router</strong><br>示例：top-2 of 4</div><div class="arrow" aria-hidden="true">→</div>
+        <div class="experts"><div class="expert active">专家 E1<br><small>✓ 本次选中</small></div><div class="expert">专家 E2<br><small>本次未选</small></div><div class="expert active">专家 E3<br><small>✓ 本次选中</small></div><div class="expert">专家 E4<br><small>本次未选</small></div></div>
+      </div>
+      <div class="moe-out">选中专家的输出按路由权重相加 → 传给后续网络</div>
+      <figcaption class="diagram-caption">简化示意：下一 token 可以选不同专家；不同 MoE 层拥有各自的专家。Attention 仍然存在。专家是子网络，不一定对应可命名的“数学专家”“英语专家”。</figcaption>
+    </figure>
+    <div class="callout warm"><span class="label">激活参数少，不代表全部参数少</span><p>Top-2 只意味着这个 token 在该层调用少量专家。常规 GPU 常驻方案仍要保存其他专家权重；把专家卸载到 CPU／磁盘（offloading）则可能带来额外搬运延迟。这正是 MoE 压缩值得研究的原因之一。</p></div>
+    <p class="source">延伸阅读：<a href="https://huggingface.co/blog/moe">Hugging Face · Mixture of Experts Explained</a> · <a href="https://huggingface.co/docs/transformers/main/en/kv_cache">KV cache 文档</a></p>
+  </section>
+
+  <section class="section" id="quant" aria-labelledby="quant-title">
+    <div class="section-head"><span>04</span>LESS BITS, MORE DECISIONS</div>
+    <h2 id="quant-title">位宽与量化：少用几位，付出什么？</h2>
+    <p class="lead">Bit-width（位宽）是表示一个数使用的二进制位数。位数少，能表示的数值更有限；量化 Quantization 就是把原来的数映射到较少的可表示值上。</p>
+    <div class="table-wrap"><table><caption>常见格式速查 · 先记性质，无需背二进制布局</caption><thead><tr><th scope="col">格式</th><th scope="col">每元素理论占用</th><th scope="col">初学者要知道的特点</th></tr></thead><tbody>
+      <tr><th scope="row">FP16</th><td>16 bit = 2 字节</td><td>16 位浮点数，有小数与指数；常见推理基线之一。</td></tr>
+      <tr><th scope="row">BF16</th><td>16 bit = 2 字节</td><td>与 FP16 大小相同；指数范围更大，有效数值精度较低。两者并非同一格式。</td></tr>
+      <tr><th scope="row">INT8</th><td>8 bit = 1 字节</td><td>8 位整数编码，最多 256 个码；需结合 scale 等参数还原数值。</td></tr>
+      <tr><th scope="row">INT4</th><td>4 bit = 0.5 字节</td><td>最多 16 个码；通常要把两个 4 位编码打包进一个字节，才获得相应占用。</td></tr>
+    </tbody></table></div>
+    <h3>量化像把连续的刻度，改成有限的格点</h3>
+    <p>简单对称量化可写成下面两步。<strong>Scale（缩放因子 s）</strong> 决定相邻格点有多远；先除以 s、舍入到最近整数并限制整数范围，再乘回 s，得到近似值。</p>
+    <div class="formula" role="math" aria-label="对称量化公式">整数码 q = clamp(round(w / s), q_min, q_max)
+近似权重 w_hat = q × s</div>
+    <p class="small muted"><code>clamp</code> 表示把超出范围的值截到端点。非对称量化还常使用 zero-point（零点偏移）。实际方法可按整个 Tensor、输出通道或小组 group 使用不同 scale；分组更细通常增加元数据和实现复杂度。</p>
+    <div class="grid">
+      <div class="card"><div class="term">PTQ · POST-TRAINING QUANTIZATION</div><h3 style="margin-top:0">训练后量化</h3><p>在已有模型上做量化。常用一小批代表性 <strong>Calibration data（校准数据）</strong> 观察数值范围、估计误差或搜索位宽。多数入门 PTQ 路线无需重新做完整训练，但仍有校准计算成本。</p><p class="small muted">QAT（Quantization-Aware Training，量化感知训练）则把量化影响带进训练／微调流程，第一周可以先不做。</p></div>
+      <div class="card"><div class="term">W4A8 · W = WEIGHT, A = ACTIVATION</div><h3 style="margin-top:0">读懂位宽缩写</h3><p><strong>W4A8</strong>：约定算子中的权重 4 bit、激活 8 bit。<strong>W4A16</strong> 常用于表示 4 位权重、16 位浮点激活；还要明确激活用 FP16 还是 BF16。</p><p class="small muted">缩写不说明累加器精度，也不保证 Router、Attention、KV cache 或全模型都用同一种格式。W-only 只量化权重；W+A 同时考虑权重与激活。</p></div>
+    </div>
+    <h3>混合位宽：试着给 4 个专家分配预算</h3>
+    <p>假设四个专家<strong>各有 2.5 亿参数</strong>，总计 10 亿；只算专家权重的原始数据，不含共享层、scale、打包填充或运行时开销。改变位宽，观察理论体积。</p>
+    <div class="card" id="bit-demo">
+      <span class="pill">教学算例 · 不预测模型质量或实际速度</span>
+      <div class="demo-controls">
+        <label for="bit1">专家 E1<select id="bit1" class="bit-select"><option value="4" selected>4 bit</option><option value="8">8 bit</option><option value="16">16 bit</option></select></label>
+        <label for="bit2">专家 E2<select id="bit2" class="bit-select"><option value="4" selected>4 bit</option><option value="8">8 bit</option><option value="16">16 bit</option></select></label>
+        <label for="bit3">专家 E3<select id="bit3" class="bit-select"><option value="4">4 bit</option><option value="8" selected>8 bit</option><option value="16">16 bit</option></select></label>
+        <label for="bit4">专家 E4<select id="bit4" class="bit-select"><option value="4">4 bit</option><option value="8" selected>8 bit</option><option value="16">16 bit</option></select></label>
+      </div>
+      <div class="demo-result" aria-live="polite" aria-atomic="true"><div><strong id="avg-bits">6.0 bit</strong><span>专家平均位宽</span></div><div><strong id="payload">0.75 GB</strong><span>理论纯权重体积</span></div><div><strong id="ratio">2.67×</strong><span>相对全 16 位的体积压缩比</span></div></div>
+      <p class="small muted" style="margin:16px 0 0">默认配置 [4, 4, 8, 8] 的平均值为 6 bit。这里 1 GB = 10⁹ 字节；0.75 GB 约为 0.70 GiB。修改配置只是在算空间账，不能据此判断谁“应该”用 4 bit。</p>
+    </div>
+    <div class="formula" role="math" aria-label="平均位宽与理论权重体积">参数量加权平均位宽 = Σ(Nᵢ × bᵢ) / ΣNᵢ
+纯权重字节数 ≈ Σ(Nᵢ × bᵢ) / 8</div>
+    <p><code>Nᵢ</code> 是某部分参数量，<code>bᵢ</code> 是它的位宽。专家大小不同时，不能直接平均各专家的 bit 数。报告时说明分母是<strong>“专家部分”还是“全模型”</strong>；路由频率加权平均也不能替代静态存储的参数量加权平均。</p>
+    <details><summary>为什么不能把低频专家一律压到最低位宽？</summary><div><p>路由频率只是一个信号。低频专家可能服务少量但重要的任务；高频专家也未必最敏感。需要结合激活范围与异常值、参数分布、重建误差和下游任务变化。校准文本不具代表性时，观察到的频率也可能偏差很大。</p><p>专家内不同 Linear 也可能有不同敏感度。位宽分配究竟按“专家整体”还是“专家内线性块”，以及是否允许随输入动态变化，都是需要确认的研究边界。</p></div></details>
+    <p class="source">量化概念参考：<a href="https://huggingface.co/docs/transformers/main/en/quantization/concept_guide">Hugging Face · Quantization concepts</a></p>
+  </section>
+
+  <section class="section" id="deployment" aria-labelledby="deployment-title">
+    <div class="section-head"><span>05</span>THE GAP BETWEEN A FORMULA AND A GPU</div>
+    <h2 id="deployment-title">压得更小，为什么可能没有更快？</h2>
+    <p class="lead">“数值看起来像低比特”“文件确实变小”“GPU 执行更快”是三件要分别证明的事。</p>
+    <div class="table-wrap"><table><thead><tr><th scope="col">做到了哪一步</th><th scope="col">能说明什么</th><th scope="col">还不能说明什么</th></tr></thead><tbody>
+      <tr><th scope="row">量化仿真<br>Fake / Simulated Quantization</th><td>round / clamp 后反量化回浮点，观察误差对输出的影响。</td><td>若仍保存浮点并做浮点矩阵乘法，不能证明文件变小或低位算子加速。</td></tr>
+      <tr><th scope="row">真实压缩存储<br>Packed Weights</th><td>权重以低位格式打包，并保存 scale、必要的零点和布局信息。</td><td>文件小不等于峰值显存同比下降，更不等于端到端延迟缩短。</td></tr>
+      <tr><th scope="row">实际低位后端<br>Low-bit Kernels / Backend</th><td>对应算子读取低位数据，在目标 GPU 上执行；可能在内核中反量化后用浮点运算。</td><td>单个矩阵乘法快，不保证整个生成请求同比加速。</td></tr>
+    </tbody></table></div>
+    <p><strong>Kernel（计算内核）</strong> 是 GPU 上执行具体运算的一段程序。<strong>GEMM</strong> 是通用矩阵乘法；<strong>Grouped GEMM</strong> 把多组矩阵乘法组织起来执行，适合专家各有一批 token 的情形。不同专家位宽混杂时，组织和调度会更难。</p>
+    <div class="grid">
+      <div class="card"><h3 style="margin-top:0">收益可能从哪里来？</h3><ul class="small"><li>从显存读取的权重字节数减少。</li><li>支持相应格式时，矩阵运算可能更高效。</li><li>模型能装进更少的 GPU，或减少 CPU–GPU 搬运。</li></ul><p class="small muted">小 batch 解码常容易受权重读取影响；大 batch 或长 prompt 又可能呈现不同瓶颈。都需要测量。</p></div>
+      <div class="card"><h3 style="margin-top:0">收益可能被什么抵消？</h3><ul class="small"><li>解包、反量化、格式转换的额外工作。</li><li>专家 token 太少，矩阵过小，GPU 吃不满。</li><li>位宽分组产生更多 kernel 启动与调度。</li><li>专家负载不均，跨卡通信或 KV cache 成为瓶颈。</li></ul></div>
+    </div>
+    <div class="callout warm"><span class="label">组会必须问到“具体能跑哪一种”</span><p>GPU 宣称支持 INT4，不代表现有推理框架能高效执行“同一 MoE 层中部分专家 W4、部分 W8”。需要确认<strong>GPU 型号 + 后端 + 精确格式 + group size + tensor shape + 混合位宽调度</strong>这一整套组合。</p></div>
+    <p class="source">实例：<a href="https://arxiv.org/abs/2505.05799">MxMoE 论文</a> 将位宽选择与性能模型、混合精度 GroupGEMM 结合；这说明部署成本本身也是研究问题。</p>
+  </section>
+
+  <section class="section" id="evaluation" aria-labelledby="evaluation-title">
+    <div class="section-head"><span>06</span>WHAT COUNTS AS A GOOD RESULT?</div>
+    <h2 id="evaluation-title">先约定量尺，再说“更好”</h2>
+    <p class="lead">“模型精度基本保持”需要变成一个阈值；“节省内存”需要说明统计口径；“更快”需要说明请求条件。</p>
+    <div class="table-wrap"><table><caption>实验结果至少分开报告这四组指标</caption><thead><tr><th scope="col">维度</th><th scope="col">看什么</th><th scope="col">怎么避免误读</th></tr></thead><tbody>
+      <tr><th scope="row">模型质量<br>Quality</th><td>语言建模困惑度 PPL（通常越低越好）；任务准确率／得分（通常越高越好）。</td><td>固定模型、tokenizer、数据集、提示模板和评测设置。少量聊天样例只能做直观检查。</td></tr>
+      <tr><th scope="row">权重、存储与显存<br>Weights / Storage / VRAM</th><td>参数量加权平均位宽、纯权重数据量、实际文件大小、加载后与运行峰值显存。</td><td>文件还含元数据；显存还含 KV cache、中间激活、工作区、缓存和通信缓冲。分别报告。</td></tr>
+      <tr><th scope="row">访存与带宽<br>Memory Traffic / Bandwidth</th><td>实际搬运字节数、有效传输速率与相关等待；可结合 profiler 观察瓶颈。</td><td>文件缩小只是可能少读数据；不能直接声称 GPU 带宽“提高”。区分显存与跨卡／CPU–GPU 链路。</td></tr>
+      <tr><th scope="row">速度与吞吐<br>Latency / Throughput</th><td>首 token 延迟 TTFT、后续每 token 时间、请求总时间、输出 token/s。</td><td>固定输入／输出长度、batch、并发和设备；单请求低延迟与多请求高吞吐是不同目标。</td></tr>
+    </tbody></table></div>
+    <details><summary>再解释一点：PPL、TTFT、TPOT 和 token/s</summary><div><p><strong>Perplexity（困惑度）</strong> 衡量模型在给定文本上预测下一个 token 的情况。比较 PPL 时要使用相同数据和计算设置；跨 tokenizer 的值不能随便横向比较。</p><p><strong>TTFT（Time to First Token）</strong>：从约定的请求起点到收到首个 token 的时间。服务场景可能包含排队、分词和 prefill，报告时写清边界。<strong>TPOT（Time per Output Token）</strong>：后续输出 token 的平均耗时；ITL 指相邻 token 的到达间隔。</p><p><strong>输出吞吐</strong> = 测量窗口内生成的输出 token 总数 ÷ 时间。多个请求并发的总 token/s 不等于单个用户的生成速度。若报告 p50／p95，它们分别是中位数／95% 分位延迟。</p></div></details>
+    <h3>一份公平对照实验，先固定这些条件</h3>
+    <div class="card"><ol class="small">
+      <li><strong>基线 Baseline：</strong>同一模型的 FP16／BF16、统一位宽量化、你的混合位宽方案；最好加一个简单位宽分配方法，验证复杂搜索是否值得。</li>
+      <li><strong>质量预算：</strong>例如“任务分数最多下降多少个百分点”“PPL 最多增加多少”。这是待组内确定的标准，不能自行宣称“无损”。</li>
+      <li><strong>数据分工：</strong>校准集用于确定量化参数和统计；验证集用于选方案；测试集留给最终报告，避免用测试结果反复调参。</li>
+      <li><strong>性能条件：</strong>记录 GPU 型号／数量、软件版本、后端、输入输出 token 长度、batch／并发、缓存策略和精确量化配置。</li>
+      <li><strong>测量方法：</strong>先预热，多次重复并报告波动；GPU 运算异步，低层计时要用 CUDA events 或正确同步。用经过验证的 benchmark 更省心。</li>
+    </ol></div>
+    <div class="callout"><span class="label">第一张结果表可以很朴素</span><p>模型与版本｜方法／位宽配置｜PPL／任务分数｜权重文件 GB｜峰值显存 GiB｜TTFT ms｜Decode ms/token｜输出 token/s｜请求与软件配置。<strong>暂未测出的值写“未测”，不要用理论压缩比代替实测值。</strong></p></div>
+    <p class="small muted">显存口径也要一致：PyTorch 的 allocated（张量分配）与 reserved（缓存分配器预留）不同；进程总占用还可能包含其他部分。多卡实验同时写明每卡和总量。</p>
+  </section>
+
+  <section class="section" id="meeting" aria-labelledby="meeting-title">
+    <div class="section-head"><span>07</span>THE FIRST-MEETING CHECKLIST</div>
+    <h2 id="meeting-title">带着这张清单，去确认边界</h2>
+    <p class="lead">勾选表示“已经问清／有了明确后续安排”。不用一口气问完所有问题；先解决 P0，再约定后续补充。<span class="check-count js-only" id="check-count">0 / 12 已确认</span></p>
+    <div class="grid meeting-grid">
+      <div class="card"><h3 class="priority"><span class="pill warm">P0 · 先问</span>目标与范围</h3><ul class="checklist">
+        <li><label><input type="checkbox" data-check="goal"><span><strong>最终优先优化什么？</strong><small>质量、平均位宽、实际显存还是端到端延迟？质量允许下降多少？优先追求复现、方法改进还是完整部署？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="scope"><span><strong>W-only，还是 W+A？</strong><small>只量化专家，还是共享层也做？Router／Attention／KV cache 是否在范围内？激活保留 FP16 还是 BF16？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="granularity"><span><strong>“混合”的粒度是什么？</strong><small>每层、每专家、专家内 Linear，还是输入相关的动态位宽？第一阶段允许哪些候选位宽和 group size？</small></span></label></li>
+      </ul></div>
+      <div class="card"><h3 class="priority"><span class="pill warm">P0 · 先问</span>模型与机器</h3><ul class="checklist">
+        <li><label><input type="checkbox" data-check="model"><span><strong>先在哪个模型上做？</strong><small>精确模型 ID、版本、权重位置和访问权限？现有可跑基线是什么？是否先用小模型或单层实验？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="hardware"><span><strong>能用什么服务器？怎么进入？</strong><small>GPU 型号／数量／每卡 VRAM、空闲或排队规则、磁盘配额；SSH／VPN／账号、环境和数据路径由谁协助？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="backend"><span><strong>后端真的支持混合位宽吗？</strong><small>框架与低位 kernel 支持哪些 W/A 组合、格式、形状、GPU 架构？支持每专家不同精度吗？谁负责缺失的内核与适配？</small></span></label></li>
+      </ul></div>
+      <div class="card"><h3 class="priority"><span class="pill">P1 · 接着问</span>数据与验收</h3><ul class="checklist">
+        <li><label><input type="checkbox" data-check="datasets"><span><strong>校准和评测分别用什么？</strong><small>数据集、切分、样本数、语言／领域、序列长度、缓存位置？路由统计是否需要覆盖多种任务？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="compare"><span><strong>和哪些方法公平比较？</strong><small>浮点、统一位宽、已有混合位宽方法；比较同质量、同空间预算还是两者都做？复用哪套评测脚本？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="workload"><span><strong>目标请求场景是什么？</strong><small>单请求还是服务并发？prompt／output 长度、batch 与上下文范围？测算子、整层还是完整生成？</small></span></label></li>
+      </ul></div>
+      <div class="card"><h3 class="priority"><span class="pill">P1 · 接着问</span>时间与协作</h3><ul class="checklist">
+        <li><label><input type="checkbox" data-check="timeline"><span><strong>本周与最终节点是什么？</strong><small>下次组会日期、第一周最小产物、复现／改进／部署的阶段节点；明确哪件事可以推后。</small></span></label></li>
+        <li><label><input type="checkbox" data-check="deliverables"><span><strong>预期交付什么？</strong><small>文献对照表、可重复脚本、配置、结果表／图、报告或演示？“完成”的验收标准是什么？</small></span></label></li>
+        <li><label><input type="checkbox" data-check="people"><span><strong>谁负责什么，卡住找谁？</strong><small>算法、量化复现、GPU 部署、评测如何分工？服务器、基础问题和内核开发各找哪位同学／老师？</small></span></label></li>
+      </ul></div>
+    </div>
+    <div class="quote"><p>“我目前有 Python／软件工程基础，正在补 Transformer 推理和量化。希望先确认模型、设备和比较标准，再用一周完成一个可复现的小基线。第一步建议我负责哪一部分？”</p></div>
+    <div class="card notes">
+      <label for="meeting-notes">会后带走的记录</label>
+      <textarea id="meeting-notes" spellcheck="false" placeholder="研究目标与质量阈值：&#10;第一阶段范围（W-only / W+A、量化模块）：&#10;模型 / 基线 / 后端：&#10;GPU 与访问方式：&#10;校准集 / 验证集 / 测试集：&#10;本周产物 / 截止时间：&#10;分工与求助联系人：&#10;尚未确定的问题："></textarea>
+      <div class="note-actions"><span class="small muted" id="save-status" role="status">笔记与勾选会尝试保存在当前浏览器本地，不会上传。建议导出备份。</span><button class="button primary js-only" id="export-btn" type="button">导出清单与笔记 .txt</button></div>
+    </div>
+    <p class="small muted">本地文件的存储行为取决于浏览器；换浏览器、移动 HTML 或清理浏览器数据后，记录可能无法恢复。导出的 .txt 可以独立保存。页面不会发送笔记；打开外部参考链接时才需要联网。</p>
+  </section>
+
+  <section class="section" id="roadmap" aria-labelledby="roadmap-title">
+    <div class="section-head"><span>08</span>PREPARE WITHOUT PANIC</div>
+    <h2 id="roadmap-title">20 分钟准备，再走第一周</h2>
+    <p class="lead">短时间内先建立主线和问题清单。第一周以“小实验 + 可复现记录”为目标，给自己留下实际调试的空间。</p>
+    <div class="card" id="prep20">
+      <h3 style="margin-top:0">如果组会马上开始：20 分钟路线</h3>
+      <div class="timeline">
+        <div class="time">00–04′</div><div class="task"><strong><a href="#mission">读 01，讲清研究目标</a></strong>练习一句话介绍；记住质量、空间、速度是三组不同结果。</div>
+        <div class="time">04–09′</div><div class="task"><strong><a href="#basics">扫读 02</a>，再看 <a href="#inference">03 的流程图</a></strong>认出 Weight、Activation、Attention、FFN、Router 和 top-k 即可。</div>
+        <div class="time">09–13′</div><div class="task"><strong><a href="#quant">读 04 的格式表与 W4A8</a></strong>分清 FP16/BF16 与 INT8/INT4，知道 PTQ 在训练之后进行。</div>
+        <div class="time">13–16′</div><div class="task"><strong><a href="#deployment">读 05 的三阶段对照</a></strong>准备解释：“仿真误差小，不代表压缩部署一定快。”</div>
+        <div class="time">16–20′</div><div class="task"><strong><a href="#meeting">选出 3 个最急的 P0 问题</a></strong>优先确认范围、可用机器／模型、本周产物；写下自己目前会什么、缺什么。</div>
+      </div>
+      <p class="small muted">此时可以先跳过公式推导、完整论文和大模型安装。会上碰到不懂的术语，记录“它在流程中的哪一步”，会后再补。</p>
+    </div>
+    <h3>第一周：每天约 60–120 分钟，可按课程安排拆开</h3>
+    <div class="roadmap">
+      <article class="day"><div class="day-number">DAY<b>01</b></div><div><h4>Tensor 与 Linear：能看懂形状</h4><p>跟着官方教程创建 Tensor，检查 shape / dtype / device，跑一个 Linear；分清矩阵乘法与逐元素乘法。</p><div class="output">产物：一个能解释输入、权重、输出形状的小练习。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>02</b></div><div><h4>观察一次文本生成</h4><p>在组内推荐的小模型／已有环境上，查看 tokenizer、输入长度与新生成 token。画出 prefill → decode 和 KV cache 的作用。</p><div class="output">产物：一张自己画的推理流程图 + 一次运行记录。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>03</b></div><div><h4>理解 MoE 的选择过程</h4><p>阅读 MoE 入门文章的结构与路由部分。条件允许时查看组内模型配置的专家数和 top-k，尝试在一个 MoE 层记录路由频次。</p><div class="output">产物：模型结构卡；没有 GPU 时先完成 top-k 玩具算例。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>04</b></div><div><h4>运行第一个量化误差实验</h4><p>使用下一节 CPU 示例，比较 8 位与 4 位权重重建误差、同一输入的输出误差；改变 scale 粒度前先写出假设。</p><div class="output">产物：两行结果 + 对仿真局限的说明。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>05</b></div><div><h4>只复现一条最小基线</h4><p>根据设备和范围，跑通已有浮点基线；资源允许再跑一种统一位宽方法。记录版本、命令、数据与失败原因。</p><div class="output">产物：可重复的基线说明与首张结果表；未跑通时交付最小报错与排查记录。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>06</b></div><div><h4>读两篇论文的“问题—方法—证据”</h4><p>先读 MC-MoE 与 MxMoE 的摘要、主图和实验表，整理粒度、W/A 范围、基线、硬件、指标和代码入口。</p><div class="output">产物：一页对照卡，写明你还没理解或尚未验证的部分。</div></div></article>
+      <article class="day"><div class="day-number">DAY<b>07</b></div><div><h4>收束成一次 3 分钟汇报</h4><p>讲清：课题要解决什么、你实际跑了什么、观察到什么、还缺什么条件，以及下一步最小实验。</p><div class="output">产物：一页简报 + 一个需要组内决策的问题。</div></div></article>
+    </div>
+    <div class="callout"><span class="label">遇到环境阻塞时，继续做有用的事</span><p>账号或 GPU 尚未就绪，可以先做 Tensor／Linear、CPU 量化仿真、论文对照与评测表模板。把环境问题交给明确的支持人，不必把整个学习计划都停下来。</p></div>
+  </section>
+
+  <section class="section" id="experiment" aria-labelledby="experiment-title">
+    <div class="section-head"><span>09</span>A SMALL, HONEST FIRST EXPERIMENT</div>
+    <h2 id="experiment-title">用 PyTorch，亲手看一次误差</h2>
+    <p class="lead">这是单个 Linear 权重的对称、按输出通道量化练习。只需安装了 PyTorch 的 Python 环境；使用 CPU，不下载模型。它帮助理解量化，不实现 MoE 部署。</p>
+    <div class="callout warm"><span class="label">先读这条限制</span><p>示例将量化码放在 <code>int8</code> 容器里，再恢复为 <code>float32</code> 做矩阵乘法。4 位时没有打包；同时保留原权重和重建权重。因此<strong>它不是实际 INT4 推理，也没有展示真实内存节省或加速</strong>。</p></div>
+    <p class="small">把下方代码保存为 <code>quant_demo.py</code>，在已安装 PyTorch 的环境运行 <code>python quant_demo.py</code>。建议沿用组内环境；安装方式以 <a href="https://pytorch.org/get-started/locally/">PyTorch 官方安装页</a>为准。</p>
+    <div class="code-box"><div class="code-head"><span>quant_demo.py · 教学仿真 · CPU</span><button type="button" id="copy-code" class="button js-only">复制代码</button></div><pre tabindex="0" aria-label="PyTorch 权重量化示例"><code id="quant-code">import torch
+import torch.nn.functional as F
+
+torch.manual_seed(0)
+
+# 3 个输入样本，每个 8 个特征；输出为 4 个特征
+x = torch.randn(3, 8, dtype=torch.float32)
+weight = torch.randn(4, 8, dtype=torch.float32)
+bias = torch.randn(4, dtype=torch.float32)
+
+
+def quantize_dequantize(w, bits):
+    if bits not in (4, 8):
+        raise ValueError("本例只演示 4 bit 与 8 bit")
+
+    # 使用对称范围：4 bit 为 [-7, 7]；8 bit 为 [-127, 127]
+    # 为了对称，各留一个整数码不用；不是所有量化方法都这样做
+    qmax = 2 ** (bits - 1) - 1
+
+    # 每个输出通道（每行）一个 scale，shape = [4, 1]
+    row_max = w.abs().amax(dim=1, keepdim=True)
+    # 全零行使用 scale=1，避免除零；其他行按最大绝对值缩放
+    scale = torch.where(row_max &gt; 0, row_max / qmax,
+                        torch.ones_like(row_max))
+
+    q = torch.round(w / scale).clamp(-qmax, qmax).to(torch.int8)
+    w_hat = q.to(torch.float32) * scale
+    return q, scale, w_hat
+
+
+with torch.inference_mode():
+    y_ref = F.linear(x, weight, bias)  # x @ weight.T + bias
+    print("shape:", x.shape, weight.shape, y_ref.shape)
+
+    for bits in (8, 4):
+        q, scale, w_hat = quantize_dequantize(weight, bits)
+        y_hat = F.linear(x, w_hat, bias)  # 仍然是 float32 运算
+
+        weight_mse = (weight - w_hat).square().mean().item()
+        output_mse = (y_ref - y_hat).square().mean().item()
+        code_bytes = q.numel() * q.element_size()
+        scale_bytes = scale.numel() * scale.element_size()
+        ideal_bytes = weight.numel() * bits / 8
+
+        print(f"\n{bits} bit: W-MSE={weight_mse:.6f}, "
+              f"Y-MSE={output_mse:.6f}")
+        print(f"整数码容器={code_bytes} B, scale={scale_bytes} B")
+        print(f"理想打包的纯权重={ideal_bytes:.0f} B；本例未打包")
+</code></pre></div>
+    <h3>运行后，试着回答这三个问题</h3>
+    <ol><li><strong>形状为什么是 [3, 8] → [3, 4]？</strong>把它对应回 <code>F.linear</code> 的公式。</li><li><strong>4 位与 8 位的 MSE 有什么差别？</strong>MSE 是均方误差，越小表示这里的重建越接近。它不能直接代替语言模型任务质量。</li><li><strong>为什么整数码容器两次都是 32 B？</strong>32 个码都存成 int8；4 位的理想纯权重为 16 B，8 位为 32 B。另有 4 个 float32 scale，共 16 B；这里还没计其他张量。</li></ol>
+    <p class="small muted">这个练习只量化 W，输入 x 与 bias 都保留 float32；不是 W4A8。随机输入的输出误差也不能代表真实 MoE。下一步可以尝试一组真实层权重或代表性输入，但应先和组内确认模型与数据。</p>
+  </section>
+
+  <section class="section" id="resources" aria-labelledby="resources-title">
+    <div class="section-head"><span>10</span>READ WITH A QUESTION IN MIND</div>
+    <h2 id="resources-title">资料怎么找，论文怎么开始读？</h2>
+    <p class="lead">先用教程补术语，再拿着一个具体问题读论文。无需从第一篇论文的公式第一页硬啃到底。</p>
+    <h3>按这个顺序找，减少迷路</h3>
+    <div class="queries" aria-label="可直接复制的搜索关键词">
+      <code>PyTorch tensor shape dtype nn.Linear tutorial</code>
+      <code>Transformer inference prefill decode KV cache explained</code>
+      <code>MoE expert router top-k quantization mixed precision</code>
+      <code>"expert-level" "mixed-precision" "quantization" MoE</code>
+      <code>"MC-MoE" quantization GitHub</code>
+      <code>"MxMoE" GroupGEMM hardware quantization</code>
+    </div>
+    <p class="small">中文检索可用“混合专家 量化 专家级 混合位宽”“大模型 预填充 解码 键值缓存”。英文中的 <strong>mixed precision</strong> 也常指训练时 FP16/FP32 混用；加上 <code>quantization</code>、<code>MoE</code> 和 <code>expert</code> 能缩小范围。</p>
+    <div class="card">
+      <h3 style="margin-top:0">论文 15 分钟初筛法</h3>
+      <ol class="small"><li><strong>摘要 + 主图：</strong>它解决的是质量、空间还是速度？量化粒度是什么？</li><li><strong>实验表 + 设置：</strong>用了什么模型、GPU、数据和基线？速度是 kernel、整层还是端到端？</li><li><strong>方法概览：</strong>重要性怎样估计？位宽怎么选？是否需要校准、训练或内核生成？</li><li><strong>记一张对照卡：</strong>“输入条件 → 方法 → 实测收益 → 成本与限制 → 我能复现哪一部分”。暂不懂的公式先做标记。</li></ol>
+      <p class="small muted">先沿两篇已知论文的参考文献向后找基础工作，再用学术搜索查看引用它们的后续工作。初筛后，再精读与你实际任务最相关的方法段。</p>
+    </div>
+    <h3>经过核实的起点</h3>
+    <div class="card" style="padding-top:5px;padding-bottom:5px">
+      <article class="resource"><div class="resource-no">01</div><div><h3>PyTorch · Tensors &amp; Linear</h3><p>先做创建、索引、形状和矩阵运算，再看 Linear 的输入／权重／输出约定。第一天只需把这些操作跑明白。</p><div class="links"><a href="https://docs.pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html">官方 Tensor 教程 ↗</a><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Linear.html">Linear API ↗</a></div></div></article>
+      <article class="resource"><div class="resource-no">02</div><div><h3>Hugging Face · Mixture of Experts Explained</h3><p>结构与路由的入门文章。优先阅读 What is a MoE、MoEs and Transformers 与推理相关部分；训练细节可以稍后再补。</p><div class="links"><a href="https://huggingface.co/blog/moe">MoE 入门博客 ↗</a><a href="https://huggingface.co/blog/moe-transformers">2026：MoEs in Transformers ↗</a></div></div></article>
+      <article class="resource"><div class="resource-no">03</div><div><h3>Hugging Face · Quantization &amp; KV cache</h3><p>一个帮助理解 scale、量化粒度和 PTQ；另一个解释推理时的缓存及其内存取舍。把权重压缩与缓存开销分开理解。</p><div class="links"><a href="https://huggingface.co/docs/transformers/main/en/quantization/concept_guide">量化概念 ↗</a><a href="https://huggingface.co/docs/transformers/main/en/kv_cache">缓存策略 ↗</a></div></div></article>
+      <article class="resource"><div class="resource-no">04</div><div><h3>MC-MoE · Mixture Compressor for Mixture-of-Experts LLMs Gains More</h3><p>ICLR 2025。关注它如何利用专家差异进行混合位宽分配；工作也包含动态剪枝，读表时要区分量化本身和剪枝带来的收益。仓库已更名并包含后续工作，复现时核对论文版本与对应代码。</p><div class="links"><a href="https://arxiv.org/abs/2410.06270">原始论文 ↗</a><a href="https://github.com/Aaronhuang-778/Mixture-Compressor-MoE">作者 GitHub ↗</a></div></div></article>
+      <article class="resource"><div class="resource-no">05</div><div><h3>MxMoE · Mixed-precision Quantization for MoE with Accuracy and Performance Co-Design</h3><p>ICML 2025。关注位宽分配如何同时考虑误差与硬件性能，以及混合精度 GroupGEMM。它按 Linear block 分配位宽；不要自动等同于每个专家只选一个位宽。</p><p>作者 README 说明当前实现主要在 RTX 4090 测试，对 Hopper 及更新架构的性能利用存在限制。换 GPU 时需要重新检查适配与性能，不能直接套用论文加速比。</p><div class="links"><a href="https://arxiv.org/abs/2505.05799">原始论文 ↗</a><a href="https://github.com/cat538/MxMoE">作者 GitHub / 使用与限制 ↗</a></div></div></article>
+    </div>
+    <h3>打开 GitHub，先看什么？</h3>
+    <ul class="small"><li><strong>先确认来源：</strong>优先从论文或作者页面进入；相近缩写可能对应不同论文或第三方复现。</li><li><strong>读 README 的要求：</strong>支持模型、GPU 架构、软件版本、模型权重和校准数据从哪里获得；记录具体 commit／tag。</li><li><strong>分清执行入口：</strong>哪个脚本用于误差仿真，哪个生成打包权重，哪个测 kernel，哪个做端到端评测？</li><li><strong>再看 Issues 与限制：</strong>关注与你设备相同的安装或格式问题。Star 数量不能代替可复现性证据。</li><li><strong>最小运行先行：</strong>先执行组内认可的小测试，理解参数和资源需求，再启动完整量化搜索；不必一开始下载最大的模型。</li></ul>
+    <div class="callout"><span class="label">读完以后，你只需能说清五件事</span><p>模型怎样生成 token；MoE 怎样选专家；W 和 A 分别是什么；量化为什么省空间又可能损失质量；为什么真实速度仍需要 GPU 实测。剩下的问题，可以带进讨论。</p></div>
+  </section>
+  <footer class="footer"><div><b>先建立主线，再补细节。</b>面向初学者的独立学习手册 · 资料核查：2026-10-26<br>所有正文、样式与互动脚本均包含在本文件中；外部学习链接需联网。</div><a href="#top">回到顶部 ↑</a></footer>
+</main>
+</div>
+<a href="#top" class="toc-float" aria-label="回到页首章节目录">目录 ↑</a>
+<script>
+(function(){
+  'use strict';
+  document.documentElement.classList.add('has-js');
+  const navLinks=Array.from(document.querySelectorAll('.sidebar nav a'));
+  const sections=Array.from(document.querySelectorAll('main section'));
+  const progress=document.getElementById('reading-progress');
+  let scheduled=false;
+  function updateReading(){
+    const max=document.documentElement.scrollHeight-window.innerHeight;
+    const pct=max>0?Math.min(100,Math.max(0,Math.round(window.scrollY/max*100))):100;
+    progress.value=pct;document.getElementById('progress-label').textContent=pct+'%';
+    let current='';for(const s of sections){if(s.getBoundingClientRect().top<window.innerHeight*.34)current=s.id;}
+    navLinks.forEach(a=>{if(a.getAttribute('href')==='#'+current)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');});
+    scheduled=false;
+  }
+  window.addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(updateReading);}},{passive:true});
+  window.addEventListener('resize',updateReading);updateReading();
+  const details=Array.from(document.querySelectorAll('details'));
+  const expand=document.getElementById('expand-btn');
+  function updateExpand(){const all=details.every(d=>d.open);expand.setAttribute('aria-expanded',String(all));expand.textContent=all?'收起补充说明':'展开补充说明';}
+  expand.addEventListener('click',()=>{const shouldOpen=!details.every(d=>d.open);details.forEach(d=>d.open=shouldOpen);updateExpand();});
+  details.forEach(d=>d.addEventListener('toggle',updateExpand));
+  document.getElementById('print-btn').addEventListener('click',()=>window.print());
+  let printState=null;
+  window.addEventListener('beforeprint',()=>{printState=details.map(d=>d.open);details.forEach(d=>d.open=true);});
+  window.addEventListener('afterprint',()=>{if(printState)details.forEach((d,i)=>d.open=printState[i]);printState=null;updateExpand();});
+  function updateBits(){const values=Array.from(document.querySelectorAll('.bit-select')).map(s=>Number(s.value));const avg=values.reduce((a,b)=>a+b,0)/values.length;document.getElementById('avg-bits').textContent=avg.toFixed(1)+' bit';document.getElementById('payload').textContent=(avg/8).toFixed(2)+' GB';document.getElementById('ratio').textContent=(16/avg).toFixed(2)+'×';}
+  document.querySelectorAll('.bit-select').forEach(s=>s.addEventListener('change',updateBits));updateBits();
+  const checkboxes=Array.from(document.querySelectorAll('[data-check]'));
+  const notes=document.getElementById('meeting-notes');const status=document.getElementById('save-status');
+  const key='moe-intro-meeting-v1';let canStore=true;
+  function count(){document.getElementById('check-count').textContent=checkboxes.filter(c=>c.checked).length+' / '+checkboxes.length+' 已确认';}
+  try{const raw=localStorage.getItem(key);if(raw){const data=JSON.parse(raw);notes.value=typeof data.notes==='string'?data.notes:'';checkboxes.forEach(c=>c.checked=!!(data.checks&&data.checks[c.dataset.check]));}}catch(e){canStore=false;status.textContent='当前浏览器无法使用本地保存；请导出清单与笔记备份。';}count();
+  function save(){count();if(!canStore)return;try{localStorage.setItem(key,JSON.stringify({notes:notes.value,checks:Object.fromEntries(checkboxes.map(c=>[c.dataset.check,c.checked]))}));status.textContent='已保存在当前浏览器本地 · 不会上传 · 建议导出备份';}catch(e){canStore=false;status.textContent='本地保存不可用；请导出清单与笔记备份。';}}
+  notes.addEventListener('input',save);checkboxes.forEach(c=>c.addEventListener('change',save));
+  document.getElementById('export-btn').addEventListener('click',()=>{const lines=['MoE LLM 专家混合位宽压缩 · 组会清单与笔记','导出时间：'+new Date().toLocaleString('zh-CN'),''];checkboxes.forEach(c=>{const label=c.closest('label');lines.push((c.checked?'[已确认] ':'[待确认] ')+label.querySelector('strong').textContent);lines.push(label.querySelector('small').textContent,'');});lines.push('—— 会后记录 ——',notes.value||'（暂无笔记）');const blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='MoE_组会清单与笔记.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  document.getElementById('copy-code').addEventListener('click',async function(){const code=document.getElementById('quant-code').textContent;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(code);}else{const t=document.createElement('textarea');t.value=code;t.setAttribute('readonly','');t.style.position='fixed';t.style.top='-9999px';document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();if(!ok)throw new Error('copy');}this.textContent='已复制';setTimeout(()=>this.textContent='复制代码',2000);}catch(e){this.textContent='请选中代码手动复制';}});
+})();
+</script>
+</body>
+</html>
